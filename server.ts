@@ -20,6 +20,7 @@ import { BasketItemModel } from './models/basketitem'
 import { FeedbackModel } from './models/feedback'
 import { ProductModel } from './models/product'
 import { WalletModel } from './models/wallet'
+import mongoSanitize from 'express-mongo-sanitize'
 const startTime = Date.now()
 const path = require('path')
 const morgan = require('morgan')
@@ -90,6 +91,7 @@ const security = require('./lib/insecurity')
 const datacreator = require('./data/datacreator')
 const app = express()
 const server = require('http').Server(app)
+app.use(mongoSanitize())
 const appConfiguration = require('./routes/appConfiguration')
 const captcha = require('./routes/captcha')
 const trackOrder = require('./routes/trackOrder')
