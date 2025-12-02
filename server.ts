@@ -91,7 +91,6 @@ const security = require('./lib/insecurity')
 const datacreator = require('./data/datacreator')
 const app = express()
 const server = require('http').Server(app)
-app.use(mongoSanitize())
 const appConfiguration = require('./routes/appConfiguration')
 const captcha = require('./routes/captcha')
 const trackOrder = require('./routes/trackOrder')
@@ -164,6 +163,7 @@ restoreOverwrittenFilesWithOriginals().then(() => {
   /* Security middleware */
   app.use(helmet.noSniff())
   app.use(helmet.frameguard())
+  app.use(mongoSanitize())
   // app.use(helmet.xssFilter()); // = no protection from persisted XSS via RESTful API
   app.disable('x-powered-by')
   app.use(featurePolicy({
