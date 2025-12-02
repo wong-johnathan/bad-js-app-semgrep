@@ -7,6 +7,8 @@ import { Request, Response, NextFunction } from 'express'
 import { MemoryModel } from '../models/memory'
 import { ProductModel } from '../models/product'
 
+import mongoSanitize from 'express-mongo-sanitize'
+
 import challengeUtils = require('../lib/challengeUtils')
 const security = require('../lib/insecurity')
 const db = require('../data/mongodb')
@@ -14,7 +16,9 @@ const challenges = require('../data/datacache').challenges
 
 module.exports = function dataExport () {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))
+    const rawHeader = req.headers.authorization?.replace('Bearer', '') as any
+    const sanitizedHeader = mongoSanitize.sanitize(rawHeader ?? '')
+    const loggedInUser = security.authenticatedUsers.get(sanitizedHeader)
     if (loggedInUser?.data?.email && loggedInUser.data.id) {
       const username = loggedInUser.data.username
       const email = loggedInUser.data.email
